@@ -184,8 +184,8 @@ class RandomWalker(object):
             plt.show()
         else:
             writer = FFMpegWriter(fps=30, bitrate=1800)
-            ani.save("ising_model_animation.mp4", writer=writer)
-            print("Animation saved to 'ising_model_animation.mp4'")
+            ani.save("random_walk_animation.mp4", writer=writer)
+            print("Animation saved to 'random_walk_animation.mp4'")
 
     def main(self):
         self.run_simulation()

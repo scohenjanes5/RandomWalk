@@ -1,10 +1,5 @@
 import numpy as np
-import seaborn
 import random
-import os
-import time 
-
-from itertools import izip
 from matplotlib import pyplot as plt
 from collections import Counter
 
@@ -19,7 +14,7 @@ class RandomWalker(object):
 	def create_walker(self): #Creation of 10000 particles in the middle of the list
 
 		walker = [0 for x in range(self.L)]
-		walker[(len(walker)+1)/2] = 1
+		walker[int((len(walker)+1)/2)] = 1
 
 		return walker
 
@@ -29,10 +24,9 @@ class RandomWalker(object):
 	def walking(self, walker): #A random path for n timestamps is created for every particle
 
 		direction_list = list()
-		time_steps = list(range(0,self.amount_time_stamps))
 		Position_Tracker = list()
 
-		for timestep in xrange(0,self.amount_time_stamps):
+		for timestep in range(0,self.amount_time_stamps):
 			direction = self.probability_decisioner()
 			direction_list.append(direction)
 
@@ -60,7 +54,7 @@ class RandomWalker(object):
 		l = list()
 		counter_list = Counter(time_list)
 
-		for key in sorted(counter_list.iterkeys()):
+		for key in sorted(counter_list.keys()):
 			l.append([key, counter_list[key]])
 
 		return l
@@ -69,7 +63,7 @@ class RandomWalker(object):
 
 		positions = [x[0] for x in l]
 		amounts = [x[1] for x in l]
-		l = zip(positions,amounts)
+		l = list(zip(positions,amounts))
 
 		num = 0
 		den = 0
@@ -103,7 +97,7 @@ class RandomWalker(object):
 
 		Results = list()
 
-		for i in xrange(0,self.amount_time_stamps):	#Computes for every position how many times it has been visited in 1 particular timestamp
+		for i in range(0,self.amount_time_stamps):	#Computes for every position how many times it has been visited in 1 particular timestamp
 			tmp_list = Positions_Set[:,i]
 			sorted_tmp_list = self.data_processer(tmp_list)
 			res_1 = self.condition(sorted_tmp_list, 2,501)	
@@ -116,9 +110,9 @@ class RandomWalker(object):
 	def plot_results(self, Results):
 		
 		plt.plot(Results,'g', label="Vector B, D=5")
-		plt.title('$\langle x^2(t) \\rangle$ - $\langle x(t) \\rangle^2$ as a function of t')
+		plt.title(r'$\langle x^2(t) \rangle$ - $\langle x(t) \rangle^2$ as a function of t')
 		plt.xlabel('t')
-		plt.ylabel('$\langle x^2(t) \\rangle$ - $\langle x(t) \\rangle^2$')
+		plt.ylabel(r'$\langle x^2(t) \rangle$ - $\langle x(t) \rangle^2$')
 		plt.legend(loc="upper left")
 		plt.show()
 
@@ -127,7 +121,7 @@ class RandomWalker(object):
 		Positions_Set = list()
 		Results = list()
 		
-		for i in xrange(0, self.n_particles):
+		for i in range(0, self.n_particles):
 			original_walker = self.create_walker()
 			P = self.walking(original_walker)
 			Positions_Set.append(P)

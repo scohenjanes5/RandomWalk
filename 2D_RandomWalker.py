@@ -1,9 +1,5 @@
-import time
-import seaborn
 import random
-
 import numpy as np 
-
 from matplotlib import pyplot as plt 
 import matplotlib.cm as cm
 
@@ -71,7 +67,7 @@ class RandomWalker(object):
 		x_coordinates_tracker.append(initial_space[0])
 		y_coordinates_tracker.append(initial_space[1])
 
-		for time_stamp in xrange(0, self.time_stamps):
+		for time_stamp in range(0, self.time_stamps):
 			direction = self.get_direction()
 
 			if direction == 0:
@@ -106,7 +102,7 @@ class RandomWalker(object):
 		x_start = self.create_x_start()
 		y_start = self.create_y_start()
 
-		for walker in xrange(0, self.n_walkers):
+		for walker in range(0, self.n_walkers):
 			initial_space[0] = x_start
 			initial_space[1] = y_start
 			

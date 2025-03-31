@@ -111,17 +111,6 @@ class RandomWalker(object):
 
         return Results
 
-    def plot_results(self, Results):
-
-        plt.plot(Results, "g", label="Vector B, D=5")
-        plt.title(
-            r"$\langle x^2(t) \rangle$ - $\langle x(t) \rangle^2$ as a function of t"
-        )
-        plt.xlabel("t")
-        plt.ylabel(r"$\langle x^2(t) \rangle$ - $\langle x(t) \rangle^2$")
-        plt.legend(loc="upper left")
-        plt.show()
-
     def run_simulation(self):
 
         Positions_Set = list()
@@ -134,17 +123,33 @@ class RandomWalker(object):
 
         Positions_Set = self.prepare_pool(Positions_Set)
 
-        for single_pos in Positions_Set:
-            plt.plot(single_pos)
-            plt.title("Random Walk")
-            plt.xlabel("time")
-            plt.ylabel("Postion of the particles")
+        # Create subplots
+        fig, (ax1, ax2) = plt.subplots(
+            2, 1, figsize=(8, 10)
+        )  # Adjust figsize as needed
 
-        plt.show()
+        # Plotting Random Walk Trajectories
+        for single_pos in Positions_Set:
+            ax1.plot(single_pos)
+        ax1.set_title("Random Walk Trajectories")
+        ax1.set_xlabel("Time")
+        ax1.set_ylabel("Position of the particles")
 
         Results = self.process_results(Positions_Set)
 
-        self.plot_results(Results)
+        # Plotting Variance
+        ax2.plot(Results, "g", label="Vector B, D=5")
+        ax2.set_title(
+            r"$\langle x^2(t) \rangle$ - $\langle x(t) \rangle^2$ as a function of t"
+        )
+        ax2.set_xlabel("t")
+        ax2.set_ylabel(r"$\langle x^2(t) \rangle$ - $\langle x(t) \rangle^2$")
+        ax2.legend(loc="upper left")
+
+        plt.tight_layout()  # Adjust subplot parameters for a tight layout
+        plt.show()
+
+        # self.plot_results(Results) #No longer needed
 
     def main(self):
         self.run_simulation()

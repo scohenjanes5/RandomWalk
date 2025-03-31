@@ -2,7 +2,7 @@ import numpy as np
 import random
 from matplotlib import pyplot as plt
 from collections import Counter
-import matplotlib.animation as animation
+from matplotlib.animation import FuncAnimation, FFMpegWriter
 
 
 class RandomWalker(object):
@@ -170,7 +170,7 @@ class RandomWalker(object):
 
             return lines + [variance_line]
 
-        ani = animation.FuncAnimation(
+        ani = FuncAnimation(
             fig,
             update,
             frames=self.amount_time_stamps,
@@ -179,7 +179,13 @@ class RandomWalker(object):
             interval=10,
         )
 
-        plt.show()
+        vid = False
+        if not vid:
+            plt.show()
+        else:
+            writer = FFMpegWriter(fps=30, bitrate=1800)
+            ani.save("ising_model_animation.mp4", writer=writer)
+            print("Animation saved to 'ising_model_animation.mp4'")
 
     def main(self):
         self.run_simulation()

@@ -2,6 +2,7 @@ import numpy as np
 import random
 from matplotlib import pyplot as plt
 from collections import Counter
+import matplotlib.animation as animation
 
 
 class RandomWalker(object):
@@ -123,33 +124,62 @@ class RandomWalker(object):
 
         Positions_Set = self.prepare_pool(Positions_Set)
 
+        Results = self.process_results(Positions_Set)
+
         # Create subplots
         fig, (ax1, ax2) = plt.subplots(
             2, 1, figsize=(8, 10)
         )  # Adjust figsize as needed
 
         # Plotting Random Walk Trajectories
-        for single_pos in Positions_Set:
-            ax1.plot(single_pos)
+        lines = []
+        for i in range(self.n_particles):
+            (line,) = ax1.plot(
+                [], [], label=f"Particle {i+1}"
+            )  # Initialize empty lines
+            lines.append(line)
         ax1.set_title("Random Walk Trajectories")
         ax1.set_xlabel("Time")
         ax1.set_ylabel("Position of the particles")
-
-        Results = self.process_results(Positions_Set)
+        ax1.set_xlim(0, self.amount_time_stamps)
+        ax1.set_ylim(
+            min([min(p) for p in Positions_Set]), max([max(p) for p in Positions_Set])
+        )  # Adjust y limits based on data
 
         # Plotting Variance
-        ax2.plot(Results, "g", label="Vector B, D=5")
+        (variance_line,) = ax2.plot(
+            [], [], "g", label="Variance"
+        )  # Initialize empty line
         ax2.set_title(
             r"$\langle x^2(t) \rangle$ - $\langle x(t) \rangle^2$ as a function of t"
         )
         ax2.set_xlabel("t")
         ax2.set_ylabel(r"$\langle x^2(t) \rangle$ - $\langle x(t) \rangle^2$")
         ax2.legend(loc="upper left")
+        ax2.set_xlim(0, self.amount_time_stamps)
+        ax2.set_ylim(min(Results), max(Results))  # Adjust y limits based on data
 
         plt.tight_layout()  # Adjust subplot parameters for a tight layout
-        plt.show()
 
-        # self.plot_results(Results) #No longer needed
+        def update(frame):
+            for i, line in enumerate(lines):
+                line.set_data(
+                    range(frame), Positions_Set[i][:frame]
+                )  # Update particle positions
+            variance_line.set_data(range(frame), Results[:frame])  # Update variance
+
+            return lines + [variance_line]
+
+        ani = animation.FuncAnimation(
+            fig,
+            update,
+            frames=self.amount_time_stamps,
+            blit=True,
+            repeat=False,
+            interval=10,
+        )
+
+        plt.show()
 
     def main(self):
         self.run_simulation()
